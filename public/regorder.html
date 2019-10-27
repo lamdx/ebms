@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>regorder</title>
+  </head>
+  <body>
+    <h1>this is reigster homepage</h1>
+    <div id="msg"></div>
+    <!-- 序号	物流单号	下单日期	订单类型	下单人姓名	下单人联系方式	发货地址	
+    商品名称	商品类型	数量	打包重量	打包体积	承运商	实际发车时间	
+    运单号	收货方姓名	收货方手机	收货方地址	订单状态 -->
+    发货人姓名：
+    <input type="text" name="eid" id="eid" oninput="checkEid()" /><br>
+    发货人联系方式：
+    <input type="text" name="phone" id="phone" /><br>
+    发货地址：
+    <input type="text" name="user_name" id="user_name" /><br>
+    收货人姓名：
+    <input type="text" name="user_name" id="user_name" /><br>
+    收货人联系方式：
+    <input type="text" name="user_name" id="user_name" /><br>
+    收货地址：
+    <input type="text" name="user_name" id="user_name" /><br>
+    商品名称：
+    <input type="text" name="user_name" id="user_name" /><br>
+    商品类型：
+    <input type="text" name="user_name" id="user_name" /><br>
+    商品数量：
+    <input type="text" name="user_name" id="user_name" /><br>
+    订单类型：
+    <input type="text" name="user_name" id="user_name" /><br>
+    承运商：
+    <input type="text" name="user_name" id="user_name" /><br>
+    <button onclick="regUser()">注册</button>
+    <script>
+      `oid`
+      `orderNo`
+      `orderTime`
+      `orderType`
+      `sname`
+      `sphone`
+      `saddress`
+      `gname`
+      `gtype`
+      `gamount`
+      `gweight`
+      `gvolume`
+      `fwd`
+      `deliveryTime`
+      `tNumber`
+      `rname`
+      `rphone`
+      `raddress`
+      `status`;
+      function checkEid() {
+        var $eid = eid.value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", "/user/v1/checkeid/" + $eid, true);
+        if (!$eid) {
+          return (msg.innerHTML = "用户名没有填写");
+        }
+        xhr.send();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = xhr.responseText;
+            if (res == 0) {
+              msg.innerHTML = "此用户已经存在";
+            } else {
+              msg.innerHTML = "用户名合法";
+            }
+          }
+        };
+      }
+
+      function checkPwd() {
+        if (pwd.value.length == 0) {
+          msg.innerHTML = "密码不能为空";
+        } else if (pwd.value == cpwd.value) {
+          msg.innerHTML = "密码一致";
+        } else if (pwd.value != cpwd.value && cpwd.value.length != 0) {
+          msg.innerHTML = "两次输入的密码不一致";
+        }
+      }
+
+      function checkCpwd() {
+        if (cpwd.value.length == 0) {
+          msg.innerHTML = "密码验证不能为空";
+        } else if (cpwd.value == pwd.value) {
+          msg.innerHTML = "密码一致";
+        } else if (cpwd.value != pwd.value && pwd.value.length != 0) {
+          msg.innerHTML = "两次输入的密码不一致";
+        }
+      }
+
+      function regUser() {
+        var $eid = eid.value;
+        var $pwd = pwd.value;
+        var $cpwd = cpwd.value;
+        var $email = email.value;
+        var $phone = phone.value;
+        var $user_name = user_name.value;
+        var $gender = "";
+        m.checked ? ($gender = 1) : ($gender = 0);
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", "/user/v1/reguser", true);
+        var formdata =
+          "eid=" +
+          $eid +
+          "&pwd=" +
+          $pwd +
+          "&cpwd=" +
+          $cpwd +
+          "&email=" +
+          $email +
+          "&phone=" +
+          $phone +
+          "&user_name=" +
+          $user_name +
+          "&gender=" +
+          $gender;
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(formdata);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = xhr.responseText;
+            console.log(res);
+            if (res == 1) {
+              alert("注册成功");
+              window.location.href = "login.html";
+            } else if (res == 0) {
+              msg.innerHTML = "此用户/手机号码已经存在";
+            } else if (res == -1) {
+              msg.innerHTML = "工号没有填写";
+            } else if (res == -2) {
+              msg.innerHTML = "密码没有填写";
+            } else if (res == -3) {
+              msg.innerHTML = "确认密码没有填写";
+            } else if (res == -4) {
+              msg.innerHTML = "邮箱没有填写";
+            } else if (res == -5) {
+              msg.innerHTML = "手机没有填写";
+            } else if (res == -6) {
+              msg.innerHTML = "真实姓名没有填写";
+            } else {
+              msg.innerHTML = "注册失败";
+            }
+          }
+        };
+      }
+    </script>
+  </body>
+</html>

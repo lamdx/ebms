@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>updateuser</title>
+  </head>
+  <body onload="show()">
+    <h2>this is update homepage</h2>
+    <div id="msg"></div>
+    用户账号：<input type="text" name="eid" id="eid" readonly /><br />
+    原密码：<input type="text" name="opwd" id="opwd" /><br />
+    新密码： <input type="text" name="pwd" id="pwd" onblur="checkPwd()" /><br />
+    确认密码：<input
+      type="text"
+      name="cpwd"
+      id="cpwd"
+      onblur="checkCpwd()"
+    /><br />
+    <button onclick="updateuser()">更新</button>
+    <script>
+      function updateuser() {
+        var $eid = eid.value;
+        var $opwd = opwd.value;
+        var $pwd = pwd.value;
+        var $cpwd = cpwd.value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("put", "/user/v1/updateuser", true);
+        var formdata =
+          "eid=" + $eid + "&opwd=" + $opwd + "&pwd=" + $pwd + "&cpwd=" + $cpwd;
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(formdata);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = JSON.parse(xhr.responseText);
+            console.log(typeof res);
+            console.log(res);
+            if (res == 1) {
+              // window.location.href = "userlist.html";
+              msg.innerHTML = "密码修改成功";
+            } else if (res == -1) {
+              msg.innerHTML = "原密码没有填写";
+            } else if (res == -2) {
+              msg.innerHTML = "新密码没有填写";
+            } else if (res == -3) {
+              msg.innerHTML = "确认密码没有填写";
+            } else if (res == -4) {
+              msg.innerHTML = "新密码不能与旧密码一致";
+            } else {
+              msg.innerHTML = "原密码填写错误";
+            }
+          }
+        };
+      }
+      function show() {
+        // var $uid = location.search.replace("?uid=", "");
+        // 获取url中?后面的参数
+        var urlParams = new URLSearchParams(location.search);
+        // 获取传递过来的 uid
+        var $eid = urlParams.get("eid");
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", "/user/v1/searchuser/" + $eid, true);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = xhr.responseText;
+            if (res == 0) {
+              msg.innerHTML = "此用户不存在";
+            } else {
+              var obj = JSON.parse(res);
+              eid.value = obj.eid;
+            }
+          }
+        };
+      }
+
+      function checkPwd() {
+        if (pwd.value.length == 0) {
+          msg.innerHTML = "密码不能为空";
+        } else if (pwd.value == cpwd.value) {
+          msg.innerHTML = "密码一致";
+        } else if (pwd.value != cpwd.value && cpwd.value.length != 0) {
+          msg.innerHTML = "两次输入的密码不一致";
+        }
+      }
+
+      function checkCpwd() {
+        if (cpwd.value.length == 0) {
+          msg.innerHTML = "密码验证不能为空";
+        } else if (cpwd.value == pwd.value) {
+          msg.innerHTML = "密码一致";
+        } else if (cpwd.value != pwd.value && pwd.value.length != 0) {
+          msg.innerHTML = "两次输入的密码不一致";
+        }
+      }
+    </script>
+  </body>
+</html>

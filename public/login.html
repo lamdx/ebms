@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>login</title>
+  </head>
+  <body>
+    <h1>this is login homepage</h1>
+    <div id="msg"></div>
+    <input type="text" id="eid" /><br />
+    <input type="text" id="pwd" /><br />
+    <button onclick="login()">登录</button>
+    <button onclick="register()">注册</button>
+    <script>
+      function login() {
+        var $eid = eid.value;
+        var $pwd = pwd.value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", "/user/v1/login/" + $eid + "&" + $pwd, true);
+        if (!$eid) {
+          return (msg.innerHTML = "用户名不能为空");
+        }
+        if (!$pwd) {
+          return (msg.innerHTML = "密码不能为空");
+        }
+        xhr.send();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = xhr.responseText;
+            if (res == 1) {
+              msg.innerHTML = "登录成功";
+              // window.location.href = "userlist.html";
+            } else if (res == 0) {
+              msg.innerHTML = "用户名或者密码错误";
+            }
+          }
+        };
+      }
+      function register() {
+        window.location.href = "reguser.html";
+      }
+    </script>
+  </body>
+</html>
