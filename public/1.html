@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>login</title>
+    <link
+      rel="stylesheet"
+      href="/node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="header">
+        <!-- logo -->
+        <a href="#"
+          ><img src="img/avatar-default.png" class="img-circle" alt=""
+        /></a>
+        <h1>用户登录</h1>
+      </div>
+      <form id="login_form">
+        <div class="form-group">
+          <label for="eid">工号</label>
+          <input
+            type="text"
+            class="form-control"
+            name="eid"
+            id="eid"
+            placeholder="请输入工号"
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="pwd">密码</label>
+          <a href="#" class="pull-right">忘记密码？</a>
+          <input
+            type="password"
+            class="form-control"
+            name="pwd"
+            id="pwd"
+            placeholder="请输入密码"
+          />
+        </div>
+        <div class="checkbox">
+          <label for="reme">
+            <input type="checkbox" name="" id="reme" /> 记住我
+          </label>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">登录</button>
+      </form>
+      <div class="message">
+        <p>没有账号？<a href="#">点击创建</a></p>
+      </div>
+    </div>
+    <script>
+      $(function() {
+        function login() {
+          var username = $("#username").val();
+          var password = $("#password").val();
+
+          if (!username) {
+            alert("请输入正确的用户名");
+            return;
+          }
+          if (!password) {
+            alert("请输入正确的密码");
+            return;
+          }
+
+          $.ajax({
+            url: "/employee/employeeLogin",
+            dataType: "json",
+            type: "POST",
+            data: {
+              username: username,
+              password: password
+            },
+            success: function(data) {
+              console.log(data);
+              if (data.success) {
+                //跳转到首页
+                window.location.href = "index.html";
+              } else {
+                alert(data.message);
+              }
+            }
+          });
+        }
+
+        /*给登录按钮添加点击事件，点击登录，处理逻辑*/
+        $(".btn-lg").on("click", function() {
+          login();
+        });
+
+        //我还需要做一个快捷点登录.
+
+        $(document).keyup(function(event) {
+          //判断event 的值keyCode 的值，
+          //如果这个keyCode 的值等于13 ，说明用户按的是enter 键
+          if (event.keyCode == 13) {
+            login();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

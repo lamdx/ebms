@@ -73,7 +73,7 @@ router.get("/v1/orderno/:no", (req, res) => {
     }
   });
 });
-// 5.2根据订单状态查询订单 1页显示15条记录 2
+// 5.2根据订单状态查询订单 1页显示15条记录 不重要
 router.get("/v1/orderstatus/:sid", (req, res) => {
   let $sid = req.params.sid;
   let sql =
@@ -89,7 +89,7 @@ router.get("/v1/orderstatus/:sid", (req, res) => {
     }
   });
 });
-// 5.3根据订单类型查询订单 1页显示15条记录 1
+// 5.3根据订单类型查询订单 1页显示15条记录 不重要
 router.get("/v1/ordertype/:tid", (req, res) => {
   let $tid = req.params.tid;
   let sql =
@@ -105,14 +105,27 @@ router.get("/v1/ordertype/:tid", (req, res) => {
     }
   });
 });
-// 5.4根据时间查询订单 1页显示15条记录
-// http://localhost/order/v1/ordertime/2019-10-23&2019-10-24
-router.get("/v1/ordertime/:start&:end", (req, res) => {
+// 5.4根据时间&类型查询订单 1页显示15条记录 降序
+// http://localhost/order/v1/ordertime/2019-10-23&2019-10-24&1&0
+// WS191023023 PKS191023038
+router.get("/v1/ordertime/:start&:end&:type&:no", (req, res) => {
   let $start = req.params.start;
   let $end = req.params.end;
-  let sql =
-    "select * from order_list where orderTime > ? and orderTime < ? ORDER BY orderTime DESC";
-  pool.query(sql, [$start, $end], (err, result) => {
+  let $type = req.params.type;
+  let $no = req.params.no;
+  let $where = "";
+  // 判断查询条件
+  if ($no != 0 && $type != 0) {
+    $where = `orderTime > '${$start}' and orderTime < '${$end}' and orderType = ${$type} and orderNo = '${$no}'`;
+  } else if ($no == 0 && $type != 0) {
+    $where = `orderTime > '${$start}' and orderTime < '${$end}' and orderType = ${$type}`;
+  } else if ($no != 0 && $type == 0) {
+    $where = `orderTime > '${$start}' and orderTime < '${$end}' and orderNo = '${$no}'`;
+  } else {
+    $where = `orderTime > '${$start}' and orderTime < '${$end}'`;
+  }
+  let sql = `select * from order_list where ${$where} ORDER BY orderTime DESC`;
+  pool.query(sql, (err, result) => {
     if (err) throw err;
     // console.log(result);
     // 查询数据库得到的是对象数组
@@ -142,7 +155,7 @@ router.get("/v1/updatestatus/:no&:status", (req, res) => {
   });
 });
 
-// 7.根据订单号上传订单信息
+// 7.根据订单号上传订单信息 暂时没有写非空判断
 router.put("/v1/updateorder", (req, res) => {
   // let $uid = req.body.uid;
   // let $email = req.body.email;
@@ -150,21 +163,9 @@ router.put("/v1/updateorder", (req, res) => {
   // let $user_name = req.body.user_name;
   // let $gender = req.body.gender;
   let obj = req.body;
-  // console.log(obj);
-  if (!obj.opwd) {
-    return res.send("-1");
-  }
-  if (!obj.pwd) {
-    return res.send("-2");
-  }
-  if (!obj.cpwd) {
-    return res.send("-3");
-  }
-  if (obj.opwd == obj.pwd) {
-    return res.send("-4");
-  }
-  let sql = "update user set pwd = ? where eid = ? and pwd = ?;";
-  pool.query(sql, [obj.pwd, obj.eid, obj.opwd], (err, result) => {
+  console.log(obj);
+  let sql = "update order_list set ? where orderNo = ?;";
+  pool.query(sql, [obj, obj.orderNo], (err, result) => {
     if (err) throw err;
     console.log(result);
     if (result.affectedRows > 0) {
@@ -177,53 +178,45 @@ router.put("/v1/updateorder", (req, res) => {
 });
 
 // 8.新增订单
-/*
 router.post("/v1/orderadd", (req, res) => {
   let obj = req.body;
   console.log(obj);
-  if (!obj.eid) {
-    return res.send("-1");
-  }
-  if (!obj.pwd) {
-    return res.send("-2");
-  }
-  if (!obj.cpwd) {
-    return res.send("-3");
-  }
-  if (!obj.email) {
-    return res.send("-4");
-  }
-  if (!obj.phone) {
-    return res.send("-5");
-  }
-  if (!obj.user_name) {
-    return res.send("-6");
-  }
-  if (!obj.gender) {
-    return res.send("-7");
-  }
-  delete obj.cpwd;
-  // 用户名/手机号码验证唯一
-  let sql = "select * from user where eid = ? or phone = ?";
-  pool.query(sql, [obj.eid, obj.phone], (err, result) => {
+  let sql = "insert into order_list set ? ";
+  pool.query(sql, [obj], (err, result) => {
     if (err) throw err;
-    if (result.length > 0) {
-      // 用户名/手机号码已存在
-      return res.send("0");
+    console.log(result);
+    if (result.affectedRows > 0) {
+      res.send("1");
     } else {
-      // 用户名不存在
-      let sql = "insert into user set ? ";
-      pool.query(sql, [obj], (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        if (result.affectedRows > 0) {
-          res.send("1");
-        } else {
-          res.send("2");
-        }
-      });
+      res.send("0");
     }
   });
-});*/
+});
+
+// 查询所有订单类型
+router.get("/v1/order_type", (req, res) => {
+  let sql = "select * from order_type";
+  pool.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+// 查询所有承运商
+router.get("/v1/fwd", (req, res) => {
+  let sql = "select * from fwd";
+  pool.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+// 查询所有订单状态
+router.get("/v1/order_status", (req, res) => {
+  let sql = "select * from order_status";
+  pool.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
 // 导出路由器对象
 module.exports = router;

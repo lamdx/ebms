@@ -12,115 +12,187 @@
     <!-- 序号	物流单号	下单日期	订单类型	下单人姓名	下单人联系方式	发货地址	
     商品名称	商品类型	数量	打包重量	打包体积	承运商	实际发车时间	
     运单号	收货方姓名	收货方手机	收货方地址	订单状态 -->
-    发货人姓名：
-    <input type="text" name="eid" id="eid" oninput="checkEid()" /><br>
-    发货人联系方式：
-    <input type="text" name="phone" id="phone" /><br>
-    发货地址：
-    <input type="text" name="user_name" id="user_name" /><br>
-    收货人姓名：
-    <input type="text" name="user_name" id="user_name" /><br>
-    收货人联系方式：
-    <input type="text" name="user_name" id="user_name" /><br>
-    收货地址：
-    <input type="text" name="user_name" id="user_name" /><br>
-    商品名称：
-    <input type="text" name="user_name" id="user_name" /><br>
-    商品类型：
-    <input type="text" name="user_name" id="user_name" /><br>
-    商品数量：
-    <input type="text" name="user_name" id="user_name" /><br>
     订单类型：
-    <input type="text" name="user_name" id="user_name" /><br>
+    <select name="orderType" id="orderType"></select>
+    发货人姓名：
+    <input type="text" name="sname" id="sname" /><br />
+    发货人联系方式：
+    <input type="text" name="sphone" id="sphone" /><br />
+    发货地址：
+    <input type="text" name="saddress" id="saddress" /><br />
+    收货人姓名：
+    <input type="text" name="rname" id="rname" /><br />
+    收货人联系方式：
+    <input type="text" name="rphone" id="rphone" /><br />
+    收货地址：
+    <input type="text" name="raddress" id="raddress" /><br />
+    商品名称：
+    <input type="text" name="gname" id="gname" /><br />
+    商品类型：
+    <input type="text" name="gtype" id="gtype" /><br />
+    商品数量：
+    <input type="text" name="gamount" id="gamount" /><br />
     承运商：
-    <input type="text" name="user_name" id="user_name" /><br>
-    <button onclick="regUser()">注册</button>
+    <select name="fwd" id="fwd"></select>
+    <input type="hidden" name="orderNo" id="orderNo" />
+    <!-- <input type="hidden" name="status" id="_status" value="2" /> -->
+    <button onclick="addOrder()">保存</button>
     <script>
-      `oid`
-      `orderNo`
-      `orderTime`
-      `orderType`
-      `sname`
-      `sphone`
-      `saddress`
-      `gname`
-      `gtype`
-      `gamount`
-      `gweight`
-      `gvolume`
-      `fwd`
-      `deliveryTime`
-      `tNumber`
-      `rname`
-      `rphone`
-      `raddress`
-      `status`;
-      function checkEid() {
-        var $eid = eid.value;
+      // 将返回的对象数组中的对象的属性名重新命名为 id & option
+      function getOption(url, target) {
         var xhr = new XMLHttpRequest();
-        xhr.open("get", "/user/v1/checkeid/" + $eid, true);
-        if (!$eid) {
-          return (msg.innerHTML = "用户名没有填写");
-        }
+        xhr.open("get", url, true);
         xhr.send();
         xhr.onreadystatechange = function() {
           if (xhr.readyState == 4 && xhr.status == 200) {
-            var res = xhr.responseText;
+            var res = JSON.parse(xhr.responseText);
+            // console.log(res);
+            // 将对象的属性名重新命名为 id & option
+            var arr = [];
+            // 遍历对象数组
+            res.forEach(function(item, i) {
+              var obj = {};
+              for (var key in item) {
+                // 判断原对象属性名是否含有'id'
+                // 若原对象属性名含有'id'，则将其值赋给新对象的obj.id
+                // 若原对象属性名不含有'id'，则将其值赋给新对象的obj.option
+                key.indexOf("id") != -1
+                  ? (obj.id = item[key])
+                  : (obj.option = item[key]);
+              }
+              arr.push(obj);
+            });
+            // console.log(arr);
+            var str = "";
+            for (var i = 0; i < arr.length; i++) {
+              str += `<option value="${arr[i].id}" ${
+                arr[i].id == 1 ? " selected" : ""
+              }>${arr[i].option}</option>`;
+            }
+            target.innerHTML = str;
+          }
+        };
+      }
+      getOption("/order/v1/order_type", document.getElementById("orderType"));
+      getOption("/order/v1/fwd", document.getElementById("fwd"));
+      // 根据当前时间和随机数生成流水号
+      // 格式化日期时间 yyyy-MM-dd hh:mm:ss
+      Date.prototype.format = function(fmt) {
+        var reg;
+        var opt = {
+          "y+": this.getFullYear().toString(), // 年
+          "M+": (this.getMonth() + 1).toString(), // 月
+          "d+": this.getDate().toString(), // 日
+          "h+": this.getHours().toString(), // 时
+          "m+": this.getMinutes().toString(), // 分
+          "s+": this.getSeconds().toString(), // 秒
+          "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+          S: this.getMilliseconds() //毫秒
+          // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        };
+        for (var k in opt) {
+          reg = new RegExp("(" + k + ")").exec(fmt);
+          if (reg) {
+            // console.log(reg);
+            // console.log(typeof reg[1]);
+            // console.log(reg[1].length);
+            // console.log(opt[k]);
+            // reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0");
+            fmt = fmt.replace(
+              reg[1],
+              reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0")
+            );
+          }
+        }
+        return fmt;
+      };
+      // 生成订单号
+      function getOrder() {
+        // WS191023023 PKS191023038
+        // 获取订单类型和订单号
+        var type = orderType.value ? orderType.value : 0;
+        console.log(type);
+        // var no = orderNo.value ? orderNo.value : 0;
+        var no = 0;
+        console.log(no);
+        // var d1 = new Date("2019-10-23");
+        // 将日期格式中的 / 改为 -
+        var d1 = new Date().toLocaleDateString().replace(/\//g, "-");
+        var d2 = new Date(d1);
+        // 原日期加上1天
+        d2.setDate(d2.getDate() + 1);
+        d2 = d2.toLocaleDateString().replace(/\//g, "-");
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", `/order/v1/ordertime/${d1}&${d2}&${type}&${no}`, true);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var res = JSON.parse(xhr.responseText);
+            console.log(res);
+            // 数据库没有返回订单号就根据当天系统日期初始化订单号
             if (res == 0) {
-              msg.innerHTML = "此用户已经存在";
+              var now = new Date();
+              var year = now
+                .getFullYear()
+                .toString()
+                .substring(2);
+              var month = (now.getMonth() + 1).toString().padStart(2, "0");
+              var day = now
+                .getDate()
+                .toString()
+                .padStart(2, "0");
+              orderNo.value = "WS" + year + month + day + "001";
+              console.log(orderNo.value);
             } else {
-              msg.innerHTML = "用户名合法";
+              // 获取数据库返回的数据
+              var oldno = res[0].orderNo;
+              console.log(oldno);
+              var temp = "";
+              var current = "";
+              // 判断返回的字符串以什么开头
+              if (oldno.indexOf("WS") > -1) {
+                var temp = oldno.substring(0, 8);
+                var current = (parseInt(oldno.substring(8)) + 1)
+                  .toString()
+                  .padStart(3, "0");
+                // oldno.substring(0,8)
+                orderNo.value = temp + current;
+                // console.log(orderNo.value);
+              } else {
+                var temp = oldno.substring(0, 9);
+                var current = (parseInt(oldno.substring(9)) + 1)
+                  .toString()
+                  .padStart(3, "0");
+                orderNo.value = temp + current;
+                // console.log(orderNo.value);
+              }
             }
           }
         };
       }
-
-      function checkPwd() {
-        if (pwd.value.length == 0) {
-          msg.innerHTML = "密码不能为空";
-        } else if (pwd.value == cpwd.value) {
-          msg.innerHTML = "密码一致";
-        } else if (pwd.value != cpwd.value && cpwd.value.length != 0) {
-          msg.innerHTML = "两次输入的密码不一致";
-        }
-      }
-
-      function checkCpwd() {
-        if (cpwd.value.length == 0) {
-          msg.innerHTML = "密码验证不能为空";
-        } else if (cpwd.value == pwd.value) {
-          msg.innerHTML = "密码一致";
-        } else if (cpwd.value != pwd.value && pwd.value.length != 0) {
-          msg.innerHTML = "两次输入的密码不一致";
-        }
-      }
-
-      function regUser() {
-        var $eid = eid.value;
-        var $pwd = pwd.value;
-        var $cpwd = cpwd.value;
-        var $email = email.value;
-        var $phone = phone.value;
-        var $user_name = user_name.value;
-        var $gender = "";
-        m.checked ? ($gender = 1) : ($gender = 0);
+      getOrder();
+      // 添加订单
+      function addOrder() {
+        getOrder();
+        var $orderType = orderType.value;
+        var $sname = sname.value;
+        var $sphone = sphone.value;
+        var $saddress = saddress.value;
+        var $rname = rname.value;
+        var $rphone = rphone.value;
+        var $raddress = raddress.value;
+        var $gname = gname.value;
+        var $gtype = gtype.value;
+        var $gamount = gamount.value;
+        var $fwd = fwd.value;
+        // 获取随机订单号，设置订单初始状态和创建时间
+        var $orderNo = orderNo.value;
+        console.log(orderNo.value);
+        var $status = 2;
+        var $orderTime = new Date().format("yyyy-MM-dd hh:mm:ss");
         var xhr = new XMLHttpRequest();
-        xhr.open("post", "/user/v1/reguser", true);
-        var formdata =
-          "eid=" +
-          $eid +
-          "&pwd=" +
-          $pwd +
-          "&cpwd=" +
-          $cpwd +
-          "&email=" +
-          $email +
-          "&phone=" +
-          $phone +
-          "&user_name=" +
-          $user_name +
-          "&gender=" +
-          $gender;
+        xhr.open("post", "/order/v1/orderadd", true);
+        var formdata = `orderType=${$orderType}&sname=${$sname}&sphone=${$sphone}&saddress=${$saddress}&rname=${$rname}&rphone=${$rphone}&raddress=${$raddress}&gname=${$gname}&gtype=${$gtype}&gamount=${$gamount}&fwd=${$fwd}&orderNo=${$orderNo}&status=${$status}&orderTime=${$orderTime}`;
         xhr.setRequestHeader(
           "Content-Type",
           "application/x-www-form-urlencoded"
@@ -130,26 +202,6 @@
           if (xhr.readyState == 4 && xhr.status == 200) {
             var res = xhr.responseText;
             console.log(res);
-            if (res == 1) {
-              alert("注册成功");
-              window.location.href = "login.html";
-            } else if (res == 0) {
-              msg.innerHTML = "此用户/手机号码已经存在";
-            } else if (res == -1) {
-              msg.innerHTML = "工号没有填写";
-            } else if (res == -2) {
-              msg.innerHTML = "密码没有填写";
-            } else if (res == -3) {
-              msg.innerHTML = "确认密码没有填写";
-            } else if (res == -4) {
-              msg.innerHTML = "邮箱没有填写";
-            } else if (res == -5) {
-              msg.innerHTML = "手机没有填写";
-            } else if (res == -6) {
-              msg.innerHTML = "真实姓名没有填写";
-            } else {
-              msg.innerHTML = "注册失败";
-            }
           }
         };
       }
