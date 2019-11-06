@@ -4,49 +4,555 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>searchuser</title>
+    <title>特殊物流订单报表</title>
+    <link
+      rel="stylesheet"
+      href="/node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/fontawesome-free-5.11.2-web/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/index.css" />
   </head>
+
   <body>
-    <h1>this is searchuser homepage</h1>
-    <div id="msg"></div>
-    <input type="text" id="uid" /><br />
-    <button onclick="search()">搜索</button>
-    <script>
-      function search() {
-        var $uid = uid.value;
-        var xhr = new XMLHttpRequest();
-        xhr.open("get", "/pro/v1/searchuser/" + $uid, true);
-        xhr.send();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            var res = xhr.responseText;
-            console.log(res);
-            if (res == 0) {
-              msg.innerHTML = "此用户不存在";
-            } else {
-              var obj = JSON.parse(res);
-              var str = `
-                <table border="1px">
-                  <tr>
-                    <th>登录名称</th>
-                    <th>电子邮箱</th>
-                    <th>联系方式</th>
-                    <th>真实姓名</th>
-                    <th>用户性别</th>
-                  </tr>
-                  <tr>
-                    <td>${obj.uname}</td>
-                    <td>${obj.email}</td>
-                    <td>${obj.phone}</td>
-                    <td>${obj.user_name}</td>
-                    <td>${obj.gender == 1 ? "男" : "女"}</td>
-                  </tr>
-                </table>`;
-              msg.innerHTML = str;
-            }
-          }
-        };
-      }
+    <!-- 侧边栏目录 -->
+    <aside class="ad_aside position-absolute h-100 bg-dark">
+      <div class="jumbotron p-3 mb-0 bg-dark border-0">
+        <h6 class="display-4"><a href="index.html">EBMS</a></h6>
+      </div>
+      <!-- 菜单 -->
+      <div class="card">
+        <div class="card-header">
+          <h5>干线管理</h5>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group">
+            <!-- todo -->
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <!-- 主体 -->
+    <section class="ad_section h-100">
+      <!-- 顶部导航条 -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <!-- todo -->
+          </ul>
+        </div>
+        <!-- 当前用户 -->
+        <div class="dropdown mx-2">
+          <a
+            class="btn btn-secondary dropdown-toggle"
+            href="#"
+            id="dropdownMenuLink"
+            data-toggle="dropdown"
+          >
+            当前用户：lam
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">个人主页</a>
+            <a class="dropdown-item" href="#">帮助</a>
+            <a class="dropdown-item" href="#">设置</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">退出</a>
+          </div>
+        </div>
+      </nav>
+      <!-- 路径导航 -->
+      <nav>
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="#">当前位置</a></li>
+          <li class="breadcrumb-item"><a href="#">干线管理</a></li>
+          <li class="breadcrumb-item active">特殊物流订单报表</li>
+        </ol>
+      </nav>
+
+      <!-- 搜索栏 -->
+      <div class="card">
+        <div class="card-header">
+          特殊物流订单查询
+        </div>
+        <div class="card-body py-2">
+          <form class="form-inline">
+            <div class="form-group mx-sm-2 mb-0">
+              <label for="orderNo">需求单号：</label>
+              <input type="text" class="form-control" id="orderNo" />
+            </div>
+            <div class="form-group mx-sm-2 mb-0">
+              <label for="orderType">订单类型：</label>
+              <select
+                name="orderType"
+                class="form-control"
+                id="orderType"
+                name="orderType"
+              >
+                <option value="1">未审核</option>
+              </select>
+            </div>
+            <div class="form-group ml-sm-2 mb-0">
+              <label for="">需求日期：</label>
+              <input type="date" class="form-control" />
+            </div>
+            <div class="form-group mx-sm-1 mb-0">
+              <input type="date" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary mx-sm-2 mb-0">
+              <span class="fas fa-arrow-right"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- 订单列表 -->
+      <div class="card">
+        <div class="card-header p-0">
+          <nav class="navbar navbar-light bg-light p-0 pt-2">
+            <a class="ml-3 mb-3">特殊物流订单列表</a>
+            <ul class="pagination justify-content-end mr-4">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="card-body pre-scrollable p-0">
+          <table class="table table-striped text-center text-nowrap">
+            <thead>
+              <tr>
+                <td scope="col">序号</td>
+                <td scope="col">订单号</td>
+                <td scope="col">发货人姓名</td>
+                <td scope="col">发货人手机</td>
+                <td scope="col">发货地址</td>
+                <td scope="col">下单时间</td>
+                <td scope="col">收货人姓名</td>
+                <td scope="col">收货人手机</td>
+                <td scope="col">收货地址</td>
+                <td scope="col">承运商</td>
+                <td scope="col">商品名称</td>
+                <td scope="col">商品数量</td>
+                <td scope="col">商品类型</td>
+                <td scope="col">物流信息</td>
+                <td scope="col">打包重量</td>
+                <td scope="col">打包体积</td>
+                <td scope="col">实际发货时间</td>
+                <td scope="col">运单号</td>
+                <td scope="col">订单状态</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>WS191025027</td>
+                <td>2019-10-25 15:40:09</td>
+                <td>1</td>
+                <td>潘英豪</td>
+                <td>15118598500</td>
+                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
+                <td>文件</td>
+                <td>文件</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1*1*1</td>
+                <td>5</td>
+                <td>2019-07-02 00:00:00</td>
+                <td>362320640156</td>
+                <td>何福莲</td>
+                <td>13556811930</td>
+                <td>
+                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
+                </td>
+                <td>5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script type="text/template" id="tmpl_nav">
+      {{each nav}}
+      <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">
+        <a class="nav-link" href="#" data-tid="{{$value.tid}}">{{ $value.tname }}</a>
+      </li>
+      {{/each}}
     </script>
+    <script type="text/template" id="tmpl_nav">
+      {{each nav}}
+        <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">
+          <a class="nav-link" href="#" data-tid="{{$value.tid}}">{{ $value.tname }}</a>
+        </li>
+      {{/each}}
+    </script>
+    <script type="text/template" id="tmpl_category">
+      {{each category}}
+        <li class="list-group-item {{$value.cid == cid ? 'active' : ''}}"><a href="{{$value.nurl}}?tid={{$value.tid}}&cid={{$value.cid}}" class="text-muted">{{ $value.nname }}</a></li>
+      {{/each}}
+    </script>
+    <script src="js/common.js"></script>
   </body>
 </html>

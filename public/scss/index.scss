@@ -1,0 +1,23 @@
+a:hover,
+a:active,
+a:focus {
+  text-decoration: none;
+}
+
+.ad_aside {
+  width: 180px;
+}
+.ad_section {
+  width: 100%;
+  padding-left: 180px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+}
+.jumbotron {
+  border-radius: 0;
+}
+.card {
+  border-radius: 0;
+}

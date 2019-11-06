@@ -42,11 +42,17 @@ router.get("/v1/navbar_type", (req, res) => {
 });
 
 // 4.侧边栏目录
-router.get("/v1/category", (req, res) => {
-  let sql = "select * from category";
-  pool.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
+router.get("/v1/category/:tid", (req, res) => {
+  let $tid = req.params.tid;
+  let sql = "select * from category where tid = ?";
+  pool.query(sql, [$tid], (err, result) => {
+    // console.log(result);
+    // 查询数据库得到的是对象数组
+    if (result.length > 0) {
+      res.send(result);
+    } else {
+      res.send("0");
+    }
   });
 });
 
@@ -108,11 +114,16 @@ router.get("/v1/ordertype/:tid", (req, res) => {
 // 5.4根据时间&类型查询订单 1页显示15条记录 降序
 // http://localhost/order/v1/ordertime/2019-10-23&2019-10-24&1&0
 // WS191023023 PKS191023038
-router.get("/v1/ordertime/:start&:end&:type&:no", (req, res) => {
+router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
   let $start = req.params.start;
   let $end = req.params.end;
   let $type = req.params.type;
   let $no = req.params.no;
+  let $page = req.params.page;
+  // 分页查询条件
+  let $length = 2;
+  let $skip = ($page - 1) * $length;
+  // 初始化查询条件
   let $where = "";
   // 判断查询条件
   if ($no != 0 && $type != 0) {
@@ -124,8 +135,11 @@ router.get("/v1/ordertime/:start&:end&:type&:no", (req, res) => {
   } else {
     $where = `orderTime > '${$start}' and orderTime < '${$end}'`;
   }
-  let sql = `select * from order_list where ${$where} ORDER BY orderTime DESC`;
-  pool.query(sql, (err, result) => {
+  // SQL语句
+  let sql = `select * from order_list where ${$where} ORDER BY orderTime DESC limit ?, ?`;
+  let sql_total = `select count(1) as count from order_list where ${$where}`;
+
+  /*pool.query(sql, [$skip, $length], (err, result) => {
     if (err) throw err;
     // console.log(result);
     // 查询数据库得到的是对象数组
@@ -134,7 +148,35 @@ router.get("/v1/ordertime/:start&:end&:type&:no", (req, res) => {
     } else {
       res.send("0");
     }
-  });
+  });*/
+
+  // 封装 Promise
+  let fetch_all = function(sql, arr = {}) {
+    return new Promise(function(resolve, reject) {
+      pool.query(sql, arr, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  };
+  // 返回数据
+  let obj = {};
+  fetch_all(sql, [$skip, $length])
+    .then(function(data) {
+      // 查询所有列表数据
+      obj["orderlist"] = data;
+      return fetch_all(sql_total);
+    })
+    .then(function(data) {
+      // 先查询到所有数据的数量
+      obj["count"] = data[0]["count"];
+      // 计算总页数
+      obj["total_pages"] = data[0]["count"] / $length;
+      res.send(obj);
+    });
 });
 
 // 6.根据订单号修改订单状态 put PKS191025020 2->3

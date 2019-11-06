@@ -28,7 +28,9 @@ CREATE TABLE category(
 INSERT INTO category VALUES(null,'新增特殊物流订单','orderAdd.html',6),
 (null,'特殊物流订单审核','orderCheck.html',6),
 (null,'特殊物流订单报表','orderList.html',6),
-(null,'订单在途信息维护','orderUndate.html',6),
+(null,'订单在途信息维护','orderUpdate.html',6),
+(null,'修改密码','userUpdate.html',7),
+(null,'发布公告','noticePost.html',7),
 (null,'仓库资料管理','index.html',1),
 (null,'承运商管理','index.html',1),
 (null,'订单来源平台管理','index.html',1),
@@ -48,9 +50,7 @@ INSERT INTO category VALUES(null,'新增特殊物流订单','orderAdd.html',6),
 (null,'配送订单查询','index.html',5),
 (null,'配送订单追踪表','index.html',5),
 (null,'配送信息导出','index.html',5),
-(null,'签收单上传','index.html',5),
-(null,'修改密码','index.html',7),
-(null,'发布公告','index.html',7);
+(null,'签收单上传','index.html',5);
 
 # 首页公告
 CREATE TABLE notice(
