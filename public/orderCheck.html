@@ -248,13 +248,6 @@
     <script src="/node_modules/art-template/lib/template-web.js"></script>
     <script type="text/template" id="tmpl_nav">
       {{each nav}}
-      <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">
-        <a class="nav-link" href="#" data-tid="{{$value.tid}}">{{ $value.tname }}</a>
-      </li>
-      {{/each}}
-    </script>
-    <script type="text/template" id="tmpl_nav">
-      {{each nav}}
         <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">
           <a class="nav-link" href="#" data-tid="{{$value.tid}}">{{ $value.tname }}</a>
         </li>

@@ -1,7 +1,6 @@
 $(function() {
-  // 获取目录导航栏id
+  // 获取侧边栏目录中列表id以及顶部导航栏导航id
   // var $tid = window.location.search.replace("?tid=", "") || 1;
-  // var $cid = window.location.search.exec(/([a-z]+)=([0-9]+)/)
   var reg = /([a-z]+)=([0-9]+)/g;
   var temp = [];
   do {
@@ -10,9 +9,9 @@ $(function() {
     arr != null && temp.push(arr[2]);
     // 否则如果arr是null，就什么也不干
   } while (arr != null); // 是循环可以继续的条件，不是退出的条件
+  var $tid = temp[0] || 1;
   var $cid = temp[1];
   // console.log($cid);
-  var $tid = temp[0] || 1;
 
   // 渲染侧边栏目录
   $.ajax({
@@ -106,4 +105,83 @@ $(function() {
   };
   // var date = new Date();
   // dateFormat(date, "yyyy-MM-dd hh:mm:ss");
+
+  // 给art-template注册过滤器 格式化承运商
+  template.defaults.imports.fwdFormat = function(fwd) {
+    switch (fwd) {
+      case 1:
+        fwd = "顺丰";
+        break;
+      case 2:
+        fwd = "中通";
+        break;
+      case 3:
+        fwd = "圆通";
+        break;
+      case 4:
+        fwd = "申通";
+        break;
+      case 5:
+        fwd = "韵达";
+        break;
+    }
+    return fwd;
+  };
+  // 给art-template注册过滤器 格式化订单状态
+  template.defaults.imports.statusFormat = function(status) {
+    switch (status) {
+      case 1:
+        status = "作废";
+        break;
+      case 2:
+        status = "未审核";
+        break;
+      case 3:
+        status = "已确认";
+        break;
+      case 4:
+        status = "已发货";
+        break;
+      case 5:
+        status = "已签收";
+        break;
+    }
+    return status;
+  };
+
+  window.EB = {};
+  // 将返回的对象数组中的对象的属性名重新命名为 id & option
+  EB.getOption = function(url, target) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", url, true);
+    xhr.send();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var res = JSON.parse(xhr.responseText);
+        // console.log(res);
+        // 将对象的属性名重新命名为 id & option
+        var arr = [];
+        // 遍历对象数组
+        res.forEach(function(item, i) {
+          var obj = {};
+          for (var key in item) {
+            // 判断原对象属性名是否含有'id'
+            // 若原对象属性名含有'id'，则将其值赋给新对象的obj.id
+            // 若原对象属性名不含有'id'，则将其值赋给新对象的obj.option
+            key.indexOf("id") != -1
+              ? (obj.id = item[key])
+              : (obj.option = item[key]);
+          }
+          arr.push(obj);
+        });
+        var str = "";
+        for (var i = 0; i < arr.length; i++) {
+          str += `<option value="${arr[i].id}" ${
+            arr[i].id == 1 ? " selected" : ""
+          }>${arr[i].option}</option>`;
+        }
+        target.innerHTML = str;
+      }
+    };
+  };
 });
