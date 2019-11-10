@@ -184,4 +184,34 @@ $(function() {
       }
     };
   };
+  // 格式化日期时间 yyyy-MM-dd hh:mm:ss
+  Date.prototype.format = function(fmt) {
+    var reg;
+    var opt = {
+      "y+": this.getFullYear().toString(), // 年
+      "M+": (this.getMonth() + 1).toString(), // 月
+      "d+": this.getDate().toString(), // 日
+      "h+": this.getHours().toString(), // 时
+      "m+": this.getMinutes().toString(), // 分
+      "s+": this.getSeconds().toString(), // 秒
+      "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+      S: this.getMilliseconds() //毫秒
+      // 有其他格式化字符需求可以继续添加，必须转化成字符串
+    };
+    for (var k in opt) {
+      reg = new RegExp("(" + k + ")").exec(fmt);
+      if (reg) {
+        // console.log(reg);
+        // console.log(typeof reg[1]);
+        // console.log(reg[1].length);
+        // console.log(opt[k]);
+        // reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0");
+        fmt = fmt.replace(
+          reg[1],
+          reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0")
+        );
+      }
+    }
+    return fmt;
+  };
 });

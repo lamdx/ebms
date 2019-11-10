@@ -41,7 +41,7 @@ $(function() {
     });
   }
   // loadPage(currentPage);
-  // 渲染订单类型
+  // 渲染订单类型选项
   EB.getOption("/order/v1/order_type", document.getElementById("orderType"));
   $("form .btn").on("click", function(event) {
     event.preventDefault();

@@ -162,7 +162,7 @@ router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
       });
     });
   };
-  // 返回数据
+  // 返回数据结构 {orderlist: Array(0), count: 0, total_pages: 0}
   let obj = {};
   fetch_all(sql, [$skip, $length])
     .then(function(data) {
