@@ -66,7 +66,7 @@
             <a class="dropdown-item" href="#">帮助</a>
             <a class="dropdown-item" href="#">设置</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">退出</a>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logout">退出</a>
           </div>
         </div>
       </nav>
@@ -78,7 +78,7 @@
           <li class="breadcrumb-item active">特殊物流订单报表</li>
         </ol>
       </nav>
-      
+
       <!-- 搜索栏 -->
       <div class="card">
         <div class="card-header">
@@ -92,21 +92,17 @@
             </div>
             <div class="form-group mx-sm-2 mb-0">
               <label for="orderType">订单类型：</label>
-              <select
-                class="form-control"
-                id="orderType"
-                name="orderType"
-              >
+              <select class="form-control" id="orderType" name="orderType">
               </select>
             </div>
             <div class="form-group ml-sm-2 mb-0">
               <label for="">需求日期：</label>
-              <input type="date" class="form-control" id="tstart"/>
+              <input type="date" class="form-control" id="tstart" />
             </div>
             <div class="form-group mx-sm-1 mb-0">
-              <input type="date" class="form-control" id="tend"/>
+              <input type="date" class="form-control" id="tend" />
             </div>
-            <button type="submit" class="btn btn-primary mx-sm-2 mb-0">
+            <button class="btn btn-primary mx-sm-2 mb-0">
               <span class="fas fa-arrow-right"></span>
             </button>
           </form>
@@ -119,15 +115,7 @@
             <a class="ml-3 mb-3">特殊物流订单列表</a>
             <!-- 分页 -->
             <ul class="pagination justify-content-end mr-4">
-              <!-- <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li> -->
+              <!-- todo -->
             </ul>
           </nav>
         </div>
@@ -156,29 +144,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <tr>
-                <td>1</td>
-                <td>WS191025027</td>
-                <td>2019-10-25 15:40:09</td>
-                <td>1</td>
-                <td>潘英豪</td>
-                <td>15118598500</td>
-                <td>广东省佛山市三水区云东海碧云路易库电商物流园E栋</td>
-                <td>文件</td>
-                <td>文件</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1*1*1</td>
-                <td>5</td>
-                <td>2019-07-02 00:00:00</td>
-                <td>362320640156</td>
-                <td>何福莲</td>
-                <td>13556811930</td>
-                <td>
-                  广东省深圳市龙华新区东环二路2号富士康科技集团南大门A01栋
-                </td>
-                <td>5</td>
-              </tr> -->
+              <!-- todo -->
             </tbody>
           </table>
         </div>

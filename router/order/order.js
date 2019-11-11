@@ -37,7 +37,9 @@ router.get("/v1/navbar_type", (req, res) => {
   let sql = "select * from navbar_type";
   pool.query(sql, (err, result) => {
     if (err) throw err;
-    res.send(result);
+    // 返回当前登录信息用户
+    // console.log(req.session.user);
+    res.send({ user: req.session.user, nav: result });
   });
 });
 
@@ -121,7 +123,7 @@ router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
   let $no = req.params.no;
   let $page = req.params.page;
   // 分页查询条件
-  let $length = 2;
+  let $length = 5;
   let $skip = ($page - 1) * $length;
   // 初始化查询条件
   let $where = "";

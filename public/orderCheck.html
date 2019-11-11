@@ -66,7 +66,7 @@
             <a class="dropdown-item" href="#">帮助</a>
             <a class="dropdown-item" href="#">设置</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">退出</a>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logout">退出</a>
           </div>
         </div>
       </nav>
@@ -92,21 +92,16 @@
             </div>
             <div class="form-group mx-sm-2 mb-0">
               <label for="orderType">订单类型：</label>
-              <select
-                name="orderType"
-                class="form-control"
-                id="orderType"
-                name="orderType"
-              >
+              <select class="form-control" id="orderType" name="orderType">
                 <option value="1">未审核</option>
               </select>
             </div>
             <div class="form-group ml-sm-2 mb-0">
               <label for="">需求日期：</label>
-              <input type="date" class="form-control" />
+              <input type="date" class="form-control" id="tstart" />
             </div>
             <div class="form-group mx-sm-1 mb-0">
-              <input type="date" class="form-control" />
+              <input type="date" class="form-control" id="tend" />
             </div>
             <button type="submit" class="btn btn-primary mx-sm-2 mb-0">
               <span class="fas fa-arrow-right"></span>
@@ -119,16 +114,9 @@
         <div class="card-header p-0">
           <nav class="navbar navbar-light bg-light p-0 pt-2">
             <a class="ml-3 mb-3">物流订单列表</a>
+            <!-- 分页 -->
             <ul class="pagination justify-content-end mr-4">
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
+              <!-- todo -->
             </ul>
           </nav>
         </div>
@@ -137,107 +125,15 @@
             <thead>
               <tr>
                 <th scope="col">序号</th>
-                <th scope="col">公告标题</th>
-                <th scope="col">发布人</th>
-                <th scope="col">发布时间</th>
-                <th scope="col">操作</th>
+                <th scope="col">物流单号</th>
+                <th scope="col">下单日期</th>
+                <th scope="col">下单人姓名</th>
+                <th scope="col">下单人联系方式</th>
+                <th scope="col">订单状态/操作</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-                <td>
-                  <a href="javascript:;" class="btn btn-info btn-sm">批准</a>
-                  <a href="javascript:;" class="btn btn-warning btn-sm">拒绝</a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-                <td>
-                  <a href="javascript:;" class="btn btn-info btn-sm">批准</a>
-                  <a href="javascript:;" class="btn btn-warning btn-sm">拒绝</a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-                <td>
-                  <a href="javascript:;" class="btn btn-info btn-sm">批准</a>
-                  <a href="javascript:;" class="btn btn-warning btn-sm">拒绝</a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-                <td>
-                  <a href="javascript:;" class="btn btn-info btn-sm">批准</a>
-                  <a href="javascript:;" class="btn btn-warning btn-sm">拒绝</a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">1</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>test</td>
-                <td>管理员</td>
-                <td>2015-08-14 14:43:50</td>
-              </tr>
+              <!-- todo -->
             </tbody>
           </table>
         </div>
@@ -246,6 +142,7 @@
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="assets/twbs-pagination/jquery.twbsPagination.min.js"></script>
     <script type="text/template" id="tmpl_nav">
       {{each nav}}
         <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">
@@ -258,6 +155,28 @@
         <li class="list-group-item {{$value.cid == cid ? 'active' : ''}}"><a href="{{$value.nurl}}?tid={{$value.tid}}&cid={{$value.cid}}" class="text-muted">{{ $value.nname }}</a></li>
       {{/each}}
     </script>
+    <script type="text/template" id="tmpl_list">
+      {{each orderlist}}
+      <tr>
+        <th>{{$index+1}}</th>
+        <td data-no={{$value.orderNo}}>{{$value.orderNo}}</td>
+        <td>{{$value.orderTime|dateFormat 'yyyy-MM-dd hh:mm:ss'}}</td>
+        <td>{{$value.sname}}</td>
+        <td>{{$value.sphone}}</td>
+        {{if $value.status == 2}}
+        <td>
+          <a href="javascript:;" class="btn btn-info btn-sm">批准</a>
+          <a href="javascript:;" class="btn btn-warning btn-sm">拒绝</a>
+        </td>
+        {{else if $value.status == 1}}
+          <td>已作废</td>
+        {{else}}
+          <td>已确认</td>
+        {{/if}}
+      </tr>
+      {{/each}}
+    </script>
     <script src="js/common.js"></script>
+    <script src="js/ordercheck.js"></script>
   </body>
 </html>

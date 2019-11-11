@@ -98,7 +98,7 @@
             <a class="dropdown-item" href="#">帮助</a>
             <a class="dropdown-item" href="#">设置</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">退出</a>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logout">退出</a>
           </div>
         </div>
       </nav>
@@ -128,12 +128,12 @@
               />
             </div>
             <div class="form-group mx-sm-1 mb-0">
-              <input type="date" class="form-control" />
+              <input type="date" class="form-control" id="tstart" />
             </div>
             <div class="form-group mx-sm-1 mb-0">
-              <input type="date" class="form-control" />
+              <input type="date" class="form-control" id="tend" />
             </div>
-            <button type="submit" class="btn btn-primary mb-0">
+            <button class="btn btn-primary mb-0">
               <span class="fas fa-arrow-right"></span>
             </button>
           </form>
@@ -146,7 +146,7 @@
             <a class="ml-3 mb-3">系统公告列表</a>
             <!-- 分页 -->
             <ul class="pagination justify-content-end mr-4">
-              <li class="page-item disabled">
+              <!-- <li class="page-item disabled">
                 <a class="page-link" href="#" tabindex="-1">Previous</a>
               </li>
               <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -154,7 +154,7 @@
               <li class="page-item"><a class="page-link" href="#">3</a></li>
               <li class="page-item">
                 <a class="page-link" href="#">Next</a>
-              </li>
+              </li> -->
             </ul>
           </nav>
         </div>
@@ -195,6 +195,7 @@
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="assets/twbs-pagination/jquery.twbsPagination.min.js"></script>
     <script type="text/template" id="tmpl_nav">
       {{each nav}}
       <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">

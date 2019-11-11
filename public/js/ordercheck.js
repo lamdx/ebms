@@ -46,9 +46,49 @@ $(function() {
       }
     });
   }
-  // loadPage(currentPage);
+  loadPage(currentPage);
   $("form .btn").on("click", function(event) {
     event.preventDefault();
     loadPage(currentPage);
+  });
+  // 批准
+  $("tbody").on("click", ".btn-info", function(e) {
+    e.preventDefault();
+    var $status = 3;
+    var $no = $(this)
+      .parent()
+      .siblings("[data-no]")
+      .data("no");
+    console.log($no);
+    $.ajax({
+      type: "get",
+      url: `/order/v1/updatestatus/${$no}&${$status}`,
+      dataType: "json",
+      success: function(data) {
+        if (data == 1) {
+          loadPage(currentPage);
+        }
+      }
+    });
+  });
+  // 拒绝
+  $("tbody").on("click", ".btn-warning", function(e) {
+    e.preventDefault();
+    var $status = 1;
+    var $no = $(this)
+      .parent()
+      .siblings("[data-no]")
+      .data("no");
+    console.log($no);
+    $.ajax({
+      type: "get",
+      url: `/order/v1/updatestatus/${$no}&${$status}`,
+      dataType: "json",
+      success: function(data) {
+        if (data == 1) {
+          loadPage(currentPage);
+        }
+      }
+    });
   });
 });

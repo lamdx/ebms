@@ -7,7 +7,7 @@ const pool = require("../../pool");
 let router = express.Router();
 
 // 添加路由
-// 1.登录模块 get
+// 1.登录模块 post
 router.get("/v1/login/:eid&:pwd", (req, res) => {
   let $eid = req.params.eid;
   let $pwd = req.params.pwd;
@@ -15,6 +15,7 @@ router.get("/v1/login/:eid&:pwd", (req, res) => {
   pool.query(sql, [$eid, $pwd], (err, result) => {
     if (err) throw err;
     if (result.length > 0) {
+      req.session.user = result[0];
       return res.send("1");
     } else {
       return res.send("0");
@@ -160,6 +161,14 @@ router.post("/v1/reguser", (req, res) => {
       });
     }
   });
+});
+
+// 8.退出登录
+router.get("/v1/logout", (req, res) => {
+  // 清除登录状态
+  req.session.user = null;
+  // 重定向到登录页
+  res.send("1");
 });
 
 // 导出路由器对象

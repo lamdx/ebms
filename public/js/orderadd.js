@@ -65,6 +65,7 @@ $(function() {
   // 给按钮注册点击事件
   $(".form-inline .btn-primary").on("click", function(event) {
     event.preventDefault();
+    // 保证添加订单前先获取到订单号
     getOrder()
       .then(function(data) {
         // 数据库没有返回订单号就根据当天系统日期初始化订单号
@@ -119,14 +120,12 @@ $(function() {
             /*跳转登录*/
             location.href = location.href;
           })
+          // 点击否按钮事件
           $saveModal.on('hidden.bs.modal', function (e) {
-            // do something...
-            console.log(1);
             $('#tips').html('<span>添加订单成功</span>')
           })
         }
       });
-    return;
   });
 });
 

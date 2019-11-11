@@ -14,6 +14,8 @@ const express = require("express");
 const path = require("path");
 // 引入body-parser中间件模块
 const bodyParser = require("body-parser");
+// 引入session中间件模块
+const session = require("express-session");
 
 // 引入用户路由器
 const userRouter = require("./router/user/user");
@@ -26,6 +28,45 @@ let app = express();
 app.listen(80, function() {
   console.log(80);
 });
+
+app.use(
+  session({
+    // 配置加密字符串，它会在原有加密基础之上和这个字符串拼起来去加密
+    // 目的是为了增加安全性，防止客户端恶意伪造
+    secret: "keyboard cat",
+    resave: false,
+    // 默认值为true，即无论是否使用 Session ，都默认直接给你分配一把钥匙
+    saveUninitialized: false
+  })
+);
+app.use(function(req, res, next) {
+  var url = req.originalUrl;
+  // 没有session并且(是html文件或路径为/或路径为空)并且(路径不包含/userReg.html或/login.html)就跳转到登录页
+  if (
+    !req.session.user &&
+    ((url.indexOf("/") > -1 && url.indexOf(".html") > -1) ||
+      url == "/" ||
+      url == "") &&
+    (url.indexOf("/userReg.html") == -1 && url.indexOf("/login.html") == -1)
+  ) {
+    return res.redirect("/login.html");
+  }
+  next();
+});
+
+// 配置模板引擎和 body-parser 一定要在 app.use(router) 挂载路由之前
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// 使用body-parser中间件 parse application/x-www-form-urlencoded
+app.use(
+  bodyParser.urlencoded({
+    extended: false //不使用第三方qs模块格式化为对象，而是使用querystring
+  })
+);
+
+// parse application/json
+app.use(bodyParser.json());
 
 // 托管静态资源到public
 app.use(express.static(path.join(__dirname, "./public/")));
@@ -50,20 +91,6 @@ app.engine("html", require("express-art-template")); // 服务端渲染
 // 如果想要修改默认的 views 目录，则可以
 // app.set('views', render函数的默认路径)
 app.set("views", path.join(__dirname, "./views/")); // 默认就是./views目录
-
-// 配置模板引擎和 body-parser 一定要在 app.use(router) 挂载路由之前
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// 使用body-parser中间件 parse application/x-www-form-urlencoded
-app.use(
-  bodyParser.urlencoded({
-    extended: false //不使用第三方qs模块格式化为对象，而是使用querystring
-  })
-);
-
-// parse application/json
-app.use(bodyParser.json());
 
 // console.log(userRouter) 没有问题再挂载路由器
 // 挂载路由器，并给URL添加前缀/user

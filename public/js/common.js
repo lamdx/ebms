@@ -34,13 +34,15 @@ $(function() {
     url: "/order/v1/navbar_type",
     dataType: "json",
     success: function(data) {
+      console.log(data);
       var res = template("tmpl_nav", {
-        nav: data,
+        nav: data.nav,
         tid: $tid
       });
       $(".navbar-nav")
         .html(res)
         .fadeIn();
+      $("#dropdownMenuLink").html(`当前用户：${data.user.user_name}`);
     }
   });
   // 点击导航栏导航注册点击事件响应不同的侧边栏目录
@@ -214,4 +216,49 @@ $(function() {
     }
     return fmt;
   };
+
+  // 退出登录
+  var modalHtml = [
+    '  <div class="modal fade" id="logout" tabindex="-1">',
+    '    <div class="modal-dialog" role="document">',
+    '      <div class="modal-content">',
+    '        <div class="modal-header">',
+    '          <h5 class="modal-title" id="exampleModalLabel">温馨提示</h5>',
+    '          <button type="button" class="close" data-dismiss="modal">',
+    "            <span>&times;</span>",
+    "          </button>",
+    "        </div>",
+    '        <div class="modal-body">',
+    "          你确认要退出吗？",
+    "        </div>",
+    '        <div class="modal-footer">',
+    '          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>',
+    '          <button type="button" class="btn btn-primary">确定</button>',
+    "        </div>",
+    "      </div>",
+    "    </div>",
+    "  </div>"
+  ].join("");
+  $("body").append(modalHtml);
+  $("#logout").on("click", function(e) {
+    e.preventDefault();
+    $.ajax({
+      type: "get",
+      url: "/user/v1/logout",
+      dataType: "json",
+      success: function(data) {
+        if (data == 1) {
+          var $logout = $("#logout");
+          $logout
+            .modal("show")
+            .find(".btn-primary")
+            .on("click", function(e) {
+              $logout.modal("hide");
+              /*跳转登录*/
+              location.href = "/login.html";
+            });
+        }
+      }
+    });
+  });
 });

@@ -633,7 +633,7 @@ $json = json_encode(array(
         prev: "上一页",
         next: "下一页",
         startPage: page,
-        totalPages: data.total_pages,
+        totalPages: data.total_pages||1,
         visiblePages: 5,
         onPageClick: function(e, page) {
           // 点击分页页码才会执行这里的代码
