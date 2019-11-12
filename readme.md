@@ -164,7 +164,9 @@ $('.menu [href="javascript:;"]').on("click", function() {
 });
 
 /*3.退出功能*/
-/*把html格式的字符串转出 js字符串拼接 数组拼接  http://tools.jb51.net/transcoding/html2js*/
+/*把html格式的字符串转出 js字符串拼接 数组拼接  
+http://tools.jb51.net/transcoding/html2js
+*/
 var modalHtml = [
   '<div class="modal fade" tabindex="-1" id="logoutModal">',
   '    <div class="modal-dialog modal-sm">',

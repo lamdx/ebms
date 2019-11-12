@@ -8,8 +8,8 @@ $(function() {
   var currentPage = 1;
   // 加载指定页数据
   function loadPage(page) {
-    var $start = tstart.value || "2019-10-01";
-    var $end = tend.value || "2019-12-31";
+    var $start = $("#tstart").val() || "2019-10-01";
+    var $end = $("#tend").val() || "2019-12-31";
     // $("tbody").fadeOut();
     $.ajax({
       type: "get",

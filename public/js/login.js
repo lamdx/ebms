@@ -5,13 +5,13 @@ $(function() {
     login();
   });
   function login() {
-    var $eid = eid.value;
-    var $pwd = pwd.value;
+    var $eid = $("#eid").val();
+    var $pwd = $("#pwd").val();
     if (!$eid) {
-      return (msg.innerHTML = "用户名不能为空");
+      return $("#msg").html("用户名不能为空");
     }
     if (!$pwd) {
-      return (msg.innerHTML = "密码不能为空");
+      return $("#msg").html("密码不能为空");
     }
     $.ajax({
       type: "get",
@@ -19,10 +19,10 @@ $(function() {
       dataType: "json",
       success: function(data) {
         if (data == 1) {
-          // msg.innerHTML = "登录成功";
+          // $('#msg').html("登录成功";
           window.location.href = "index.html";
         } else if (data == 0) {
-          msg.innerHTML = "用户名或者密码错误";
+          $("#msg").html("用户名或者密码错误");
         }
       }
     });

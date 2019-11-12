@@ -9,10 +9,10 @@ $(function() {
   var currentPage = 1;
   // 加载指定页数据
   function loadPage(page) {
-    var $start = tstart.value || "2019-10-01";
-    var $end = tend.value || "2019-12-31";
-    var $orderType = orderType.value;
-    var $orderNo = orderNo.value || 0;
+    var $start = $("#tstart").val() || "2019-10-01";
+    var $end = $("#tend").val() || "2019-12-31";
+    var $orderType = $("#orderType").val();
+    var $orderNo = $("#orderNo").val() || 0;
     // $("tbody").fadeOut();
     $.ajax({
       type: "get",

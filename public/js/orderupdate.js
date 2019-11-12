@@ -7,8 +7,39 @@ $(function() {
   $("#tstart").val(
     new Date(new Date().setDate(new Date().getDate() - 30)).format("yyyy-MM-dd")
   );
+  var modalHtml = [
+    '<div class="modal fade" id="update" tabindex="-1">',
+    '  <div class="modal-dialog">',
+    '    <div class="modal-content">',
+    '      <div class="modal-header">',
+    '        <h5 class="modal-title" id="exampleModalLabel">温馨提示</h5>',
+    '        <button type="button" class="close" data-dismiss="modal">',
+    "          <span>&times;</span>",
+    "        </button>",
+    "      </div>",
+    '      <div class="modal-body">',
+    "        派车成功，是否继续？",
+    "      </div>",
+    '      <div class="modal-footer">',
+    "        <button",
+    '          type="button"',
+    '          class="btn btn-secondary"',
+    '          data-dismiss="modal"',
+    "        >",
+    "          否",
+    "        </button>",
+    '        <button type="button" class="btn btn-primary">',
+    "          是",
+    "        </button>",
+    "      </div>",
+    "    </div>",
+    "  </div>",
+    "</div>"
+  ].join("");
+  $("body").append(modalHtml);
+
   // 根据订单号查询到相应的信息
-  $("form .osearch").on("click", function(event) {
+  $("[class='btn btn-primary mx-sm-2 mb-0']").on("click", function(event) {
     event.preventDefault();
     var $start = $("#tstart").val() || "2019-10-01";
     var $end = $("#tend").val() || "2019-12-31";
@@ -24,7 +55,7 @@ $(function() {
       url: `/order/v1/ordertime/${$start}&${$end}&${$orderType}&${$orderNo}&${$page}`,
       dataType: "json",
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         var $obj = data.orderlist[0];
         $(".updatelist").removeClass("invisible");
         $(".updatelist #sname").val($obj.sname);
@@ -46,8 +77,6 @@ $(function() {
       var $data =
         $(".updatelist .form-inline").serialize() +
         `&status=${$status}&deliveryTime=${$deliveryTime}`;
-      console.log(typeof $data);
-      console.log($data);
       $.ajax({
         type: "put",
         url: "/order/v1/updateorder",
@@ -63,20 +92,19 @@ $(function() {
   $(".updatelist .btn").on("click", function(event) {
     event.preventDefault();
     updateOrder().then(function(data) {
-      console.log(data);
       // 修改成功
       if (data == 1) {
-        var $saveModal = $("#exampleModal");
-        $saveModal
+        var $update = $("#update");
+        $update
           .modal("show")
           .find(".btn-primary")
           .on("click", function(e) {
-            $saveModal.modal("hide");
+            $update.modal("hide");
             /*跳转登录*/
             location.href = location.href;
           });
         // 点击否按钮事件
-        $saveModal.on("hidden.bs.modal", function(e) {
+        $update.on("hidden.bs.modal", function(e) {
           $("#tips").html("<span>派车成功</span>");
         });
       }

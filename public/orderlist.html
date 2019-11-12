@@ -9,6 +9,7 @@
       rel="stylesheet"
       href="/node_modules/bootstrap/dist/css/bootstrap.min.css"
     />
+    <!-- Font Awesome 字体图标 -->
     <link
       rel="stylesheet"
       href="assets/fontawesome-free-5.11.2-web/css/all.min.css"
@@ -66,7 +67,13 @@
             <a class="dropdown-item" href="#">帮助</a>
             <a class="dropdown-item" href="#">设置</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logout">退出</a>
+            <a
+              class="dropdown-item"
+              href="#"
+              data-toggle="modal"
+              data-target="#logout"
+              >退出</a
+            >
           </div>
         </div>
       </nav>
@@ -152,7 +159,9 @@
     </section>
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- art-template模板引擎  -->
     <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <!-- twbs-pagination分页插件 -->
     <script src="assets/twbs-pagination/jquery.twbsPagination.min.js"></script>
     <script type="text/template" id="tmpl_nav">
       {{each nav}}
@@ -191,6 +200,6 @@
       {{/each}}
     </script>
     <script src="js/common.js"></script>
-    <script src="js/orderlist.js"></script>
+    <script src="js/orderList.js"></script>
   </body>
 </html>

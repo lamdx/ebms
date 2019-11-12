@@ -1,10 +1,25 @@
 $(function() {
-  // 获取侧边栏目录中列表id以及顶部导航栏导航id
+  // NProgress.start();
+  // NProgress.done();
+  // Nprogress.configure({
+  //   showSpinner: false
+  // });
+  $(document).ajaxStart(function() {
+    Nprogress.start();
+  });
+  $(document).ajaxComplete(function() {
+    Nprogress.done();
+  });
+  // 联动效果
+  // http://localhost/userUpdate.html?tid=7&cid=25
+  // 根据URL获取侧边栏目录中列表id以及顶部导航栏导航id
   // var $tid = window.location.search.replace("?tid=", "") || 1;
   var reg = /([a-z]+)=([0-9]+)/g;
   var temp = [];
   do {
     var arr = reg.exec(window.location.search);
+    // console.log(arr);
+    // ["tid=7", "tid", "7", index: 1, input: "?tid=7&cid=25", groups: undefined]
     // 如果arr不是null，才有必要输出
     arr != null && temp.push(arr[2]);
     // 否则如果arr是null，就什么也不干
@@ -34,7 +49,7 @@ $(function() {
     url: "/order/v1/navbar_type",
     dataType: "json",
     success: function(data) {
-      console.log(data);
+      // console.log(data);
       var res = template("tmpl_nav", {
         nav: data.nav,
         tid: $tid
@@ -42,7 +57,14 @@ $(function() {
       $(".navbar-nav")
         .html(res)
         .fadeIn();
+      // 渲染当前用户
       $("#dropdownMenuLink").html(`当前用户：${data.user.user_name}`);
+      // 如果有工号表单就设置其值且只读
+      if ($("#eid")) {
+        $("#eid")
+          .attr("readonly", "readonly")
+          .val(data.user.eid);
+      }
     }
   });
   // 点击导航栏导航注册点击事件响应不同的侧边栏目录
@@ -81,6 +103,7 @@ $(function() {
       .siblings()
       .removeClass("active");
   });
+
   // 给art-template注册过滤器 格式化时间日期
   template.defaults.imports.dateFormat = function(date, fmt) {
     date = new Date(date);
@@ -105,9 +128,6 @@ $(function() {
     }
     return fmt;
   };
-  // var date = new Date();
-  // dateFormat(date, "yyyy-MM-dd hh:mm:ss");
-
   // 给art-template注册过滤器 格式化承运商
   template.defaults.imports.fwdFormat = function(fwd) {
     switch (fwd) {
@@ -151,6 +171,76 @@ $(function() {
     return status;
   };
 
+  // 格式化日期时间 yyyy-MM-dd hh:mm:ss
+  Date.prototype.format = function(fmt) {
+    var reg;
+    var opt = {
+      "y+": this.getFullYear().toString(), // 年
+      "M+": (this.getMonth() + 1).toString(), // 月
+      "d+": this.getDate().toString(), // 日
+      "h+": this.getHours().toString(), // 时
+      "m+": this.getMinutes().toString(), // 分
+      "s+": this.getSeconds().toString(), // 秒
+      "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+      S: this.getMilliseconds() //毫秒
+      // 有其他格式化字符需求可以继续添加，必须转化成字符串
+    };
+    for (var k in opt) {
+      reg = new RegExp("(" + k + ")").exec(fmt);
+      if (reg) {
+        // console.log(reg);
+        // console.log(typeof reg[1]);
+        // console.log(reg[1].length);
+        // console.log(opt[k]);
+        // reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0");
+        fmt = fmt.replace(
+          reg[1],
+          reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0")
+        );
+      }
+    }
+    return fmt;
+  };
+  // var date = new Date();
+  // dateFormat(date, "yyyy-MM-dd hh:mm:ss");
+
+  // 每个页面都需要退出登录功能
+  var modalHtml = [
+    '  <div class="modal fade" id="logout" tabindex="-1">',
+    '    <div class="modal-dialog" role="document">',
+    '      <div class="modal-content">',
+    '        <div class="modal-header">',
+    '          <h5 class="modal-title" id="exampleModalLabel">温馨提示</h5>',
+    '          <button type="button" class="close" data-dismiss="modal">',
+    "            <span>&times;</span>",
+    "          </button>",
+    "        </div>",
+    '        <div class="modal-body">',
+    "          你确认要退出吗？",
+    "        </div>",
+    '        <div class="modal-footer">',
+    '          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>',
+    '          <button type="button" class="btn btn-primary">确定</button>',
+    "        </div>",
+    "      </div>",
+    "    </div>",
+    "  </div>"
+  ].join("");
+  $("body").append(modalHtml);
+  $("[data-target='#logout']").on("click", function(e) {
+    e.preventDefault();
+    var $logout = $("#logout");
+    // 点击模态框确定按钮，退出登录，清除session，并跳转到登录页
+    $logout
+      .modal("show")
+      .find(".btn-primary")
+      .on("click", function(e) {
+        $logout.modal("hide");
+        // 退出登录，清除session，并跳转到登录页
+        EB.logout();
+      });
+  });
+
   window.EB = {};
   // 将返回的对象数组中的对象的属性名重新命名为 id & option
   EB.getOption = function(url, target) {
@@ -186,79 +276,17 @@ $(function() {
       }
     };
   };
-  // 格式化日期时间 yyyy-MM-dd hh:mm:ss
-  Date.prototype.format = function(fmt) {
-    var reg;
-    var opt = {
-      "y+": this.getFullYear().toString(), // 年
-      "M+": (this.getMonth() + 1).toString(), // 月
-      "d+": this.getDate().toString(), // 日
-      "h+": this.getHours().toString(), // 时
-      "m+": this.getMinutes().toString(), // 分
-      "s+": this.getSeconds().toString(), // 秒
-      "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-      S: this.getMilliseconds() //毫秒
-      // 有其他格式化字符需求可以继续添加，必须转化成字符串
-    };
-    for (var k in opt) {
-      reg = new RegExp("(" + k + ")").exec(fmt);
-      if (reg) {
-        // console.log(reg);
-        // console.log(typeof reg[1]);
-        // console.log(reg[1].length);
-        // console.log(opt[k]);
-        // reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0");
-        fmt = fmt.replace(
-          reg[1],
-          reg[1].length == 1 ? opt[k] : opt[k].padStart(reg[1].length, "0")
-        );
-      }
-    }
-    return fmt;
-  };
-
-  // 退出登录
-  var modalHtml = [
-    '  <div class="modal fade" id="logout" tabindex="-1">',
-    '    <div class="modal-dialog" role="document">',
-    '      <div class="modal-content">',
-    '        <div class="modal-header">',
-    '          <h5 class="modal-title" id="exampleModalLabel">温馨提示</h5>',
-    '          <button type="button" class="close" data-dismiss="modal">',
-    "            <span>&times;</span>",
-    "          </button>",
-    "        </div>",
-    '        <div class="modal-body">',
-    "          你确认要退出吗？",
-    "        </div>",
-    '        <div class="modal-footer">',
-    '          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>',
-    '          <button type="button" class="btn btn-primary">确定</button>',
-    "        </div>",
-    "      </div>",
-    "    </div>",
-    "  </div>"
-  ].join("");
-  $("body").append(modalHtml);
-  $("#logout").on("click", function(e) {
-    e.preventDefault();
+  // 退出登录，清除session，并跳转到登录页
+  EB.logout = function() {
     $.ajax({
       type: "get",
       url: "/user/v1/logout",
       dataType: "json",
       success: function(data) {
         if (data == 1) {
-          var $logout = $("#logout");
-          $logout
-            .modal("show")
-            .find(".btn-primary")
-            .on("click", function(e) {
-              $logout.modal("hide");
-              /*跳转登录*/
-              location.href = "/login.html";
-            });
+          location.href = "/login.html";
         }
       }
     });
-  });
+  };
 });
