@@ -1,4 +1,4 @@
-/**
+/*
  * app.js 入口模块职责：
  * 	 创建服务
  * 	 做一些服务相关配置
@@ -29,6 +29,7 @@ app.listen(80, function() {
   console.log(80);
 });
 
+// 尽可能早使用session中间件
 app.use(
   session({
     // 配置加密字符串，它会在原有加密基础之上和这个字符串拼起来去加密
@@ -55,9 +56,6 @@ app.use(function(req, res, next) {
 });
 
 // 配置模板引擎和 body-parser 一定要在 app.use(router) 挂载路由之前
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
 // 使用body-parser中间件 parse application/x-www-form-urlencoded
 app.use(
   bodyParser.urlencoded({

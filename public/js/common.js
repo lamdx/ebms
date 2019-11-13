@@ -107,7 +107,6 @@ $(function($) {
     };
     for (var k in opt) {
       ret = new RegExp("(" + k + ")").exec(fmt);
-      // 毫秒是占一位字符的
       if (ret) {
         fmt = fmt.replace(
           ret[1],
@@ -176,6 +175,7 @@ $(function($) {
     };
     for (var k in opt) {
       reg = new RegExp("(" + k + ")").exec(fmt);
+      // 毫秒是占一位字符的
       if (reg) {
         // console.log(reg);
         // console.log(typeof reg[1]);
@@ -194,6 +194,8 @@ $(function($) {
   // dateFormat(date, "yyyy-MM-dd hh:mm:ss");
 
   // 每个页面都需要退出登录功能
+  /*把html格式的字符串转出 js字符串拼接 数组拼接  
+  http://tools.jb51.net/transcoding/html2js*/
   var modalHtml = [
     '  <div class="modal fade" id="logout" tabindex="-1">',
     '    <div class="modal-dialog" role="document">',
@@ -231,7 +233,7 @@ $(function($) {
   });
 
   window.EB = {};
-  // 将返回的对象数组中的对象的属性名重新命名为 id & option
+  // 将接口返回的对象数组中的对象的属性名重新命名为 id & option 方便表单 select 的渲染
   EB.getOption = function(url, target) {
     var xhr = new XMLHttpRequest();
     xhr.open("get", url, true);

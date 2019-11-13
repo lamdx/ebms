@@ -3,7 +3,7 @@ $(function() {
   EB.getOption("/order/v1/order_type", document.getElementById("orderType"));
   // 渲染承运商选项
   EB.getOption("/order/v1/fwd", document.getElementById("fwd"));
-  // 初始化查询日期
+  // 初始化查询日期，设置为系统当前日期时间的前30天
   $("#tstart").val(
     new Date(new Date().setDate(new Date().getDate() - 30)).format("yyyy-MM-dd")
   );
@@ -94,7 +94,7 @@ $(function() {
     updateOrder().then(function(data) {
       // 修改成功
       if (data == 1) {
-        var $update = $("#update");
+        var $update = $("#update"); // 模态框组件对象
         $update
           .modal("show")
           .find(".btn-primary")
@@ -105,6 +105,7 @@ $(function() {
           });
         // 点击否按钮事件
         $update.on("hidden.bs.modal", function(e) {
+          // 将保存按钮变成文本信息
           $("#tips").html("<span>派车成功</span>");
         });
       }

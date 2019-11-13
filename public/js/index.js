@@ -1,5 +1,5 @@
 $(function() {
-  // 初始化查询日期
+  // 初始化查询日期，设置为系统当前日期时间的前30天
   $("#tstart").val(
     new Date(new Date().setDate(new Date().getDate() - 30)).format("yyyy-MM-dd")
   );

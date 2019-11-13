@@ -1,7 +1,7 @@
 $(function() {
   // 渲染订单类型选项
   EB.getOption("/order/v1/order_type", document.getElementById("orderType"));
-  // 初始化查询日期
+  // 初始化查询日期，设置为系统当前日期时间的前30天
   $("#tstart").val(
     new Date(new Date().setDate(new Date().getDate() - 30)).format("yyyy-MM-dd")
   );
@@ -49,6 +49,7 @@ $(function() {
   // loadPage(currentPage);
   $("form .btn").on("click", function(event) {
     event.preventDefault();
-    loadPage(currentPage);
+    // 每次搜索重新加载第1页
+    loadPage(1);
   });
 });

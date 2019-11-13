@@ -1,7 +1,7 @@
 $(function() {
   // 渲染订单类型选项
   EB.getOption("/order/v1/order_type", document.getElementById("orderType"));
-  // 初始化查询日期
+  // 初始化查询日期，设置为系统当前日期时间的前30天
   $("#tstart").val(
     new Date(new Date().setDate(new Date().getDate() - 30)).format("yyyy-MM-dd")
   );
@@ -20,8 +20,6 @@ $(function() {
       url: `/order/v1/ordertime/${$start}&${$end}&${$orderType}&${$orderNo}&${page}`,
       dataType: "json",
       success: function(data) {
-        console.log(data);
-
         // 动态总页数 调用destroy方法，然后使用新选项初始化它 数据增加删除有可能影响页数
         $(".pagination").twbsPagination("destroy");
         // 分页组件
@@ -51,7 +49,8 @@ $(function() {
   loadPage(currentPage);
   $("form .btn").on("click", function(event) {
     event.preventDefault();
-    loadPage(currentPage);
+    // 每次搜索重新加载第1页
+    loadPage(1);
   });
   // 批准
   $("tbody").on("click", ".btn-info", function(e) {

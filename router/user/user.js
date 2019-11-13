@@ -7,7 +7,7 @@ const pool = require("../../pool");
 let router = express.Router();
 
 // 添加路由
-// 1.登录模块 post
+// 1.登录模块 get
 router.get("/v1/login/:eid&:pwd", (req, res) => {
   let $eid = req.params.eid;
   let $pwd = req.params.pwd;

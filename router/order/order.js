@@ -113,7 +113,7 @@ router.get("/v1/ordertype/:tid", (req, res) => {
     }
   });
 });
-// 5.4根据时间&类型查询订单 1页显示15条记录 降序
+// 5.4根据时间&类型&订单号&页数查询订单 1页显示5条记录 降序
 // http://localhost/order/v1/ordertime/2019-10-23&2019-10-24&1&0
 // WS191023023 PKS191023038
 router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
@@ -121,13 +121,13 @@ router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
   let $end = req.params.end;
   let $type = req.params.type;
   let $no = req.params.no;
-  let $page = req.params.page;
+  let $page = req.params.page; // 转换成数值
   // 分页查询条件
   let $length = 5;
   let $skip = ($page - 1) * $length;
   // 初始化查询条件
   let $where = "";
-  // 判断查询条件
+  // 判断查询条件 SQL条件右边记得带上''
   if ($no != 0 && $type != 0) {
     $where = `orderTime > '${$start}' and orderTime < '${$end}' and orderType = ${$type} and orderNo = '${$no}'`;
   } else if ($no == 0 && $type != 0) {
@@ -139,6 +139,7 @@ router.get("/v1/ordertime/:start&:end&:type&:no&:page", (req, res) => {
   }
   // SQL语句
   let sql = `select * from order_list where ${$where} ORDER BY orderTime DESC limit ?, ?`;
+  // 先查询到所有数据的数量
   let sql_total = `select count(1) as count from order_list where ${$where}`;
 
   /*pool.query(sql, [$skip, $length], (err, result) => {
