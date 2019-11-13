@@ -20,6 +20,8 @@ $(function() {
       url: `/order/v1/ordertime/${$start}&${$end}&${$orderType}&${$orderNo}&${page}`,
       dataType: "json",
       success: function(data) {
+        console.log(data);
+
         // 动态总页数 调用destroy方法，然后使用新选项初始化它 数据增加删除有可能影响页数
         $(".pagination").twbsPagination("destroy");
         // 分页组件
@@ -31,7 +33,7 @@ $(function() {
           prev: "上一页",
           next: "下一页",
           startPage: page,
-          totalPages: data.total_pages || 1,
+          totalPages: Math.ceil(data.total_pages) || 1,
           visiblePages: 5,
           onPageClick: function(e, page) {
             // 点击分页页码才会执行这里的代码

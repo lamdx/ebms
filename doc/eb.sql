@@ -87,8 +87,8 @@ CREATE TABLE user(
   `isDelete` INT(4) DEFAULT 0
 );
 INSERT INTO user VALUES(NULL, 'root', '123456', 'root@qq.com', '13501234567', DEFAULT, '管理员', '0', '0'),
-(NULL, 'F3232816', '123456', '13512345678@qq.com', '13512345678', DEFAULT, '张三', '0', '0'),
-(NULL, 'F3232472', '123456', '13501234568@qq.com', '13501234568', DEFAULT, '李四', '1', '0');
+(NULL, 'admin', '123456', '13512345678@qq.com', '13512345678', DEFAULT, '张三', '0', '0'),
+(NULL, 'lam', '123456', '13501234568@qq.com', '13501234568', DEFAULT, '李四', '1', '0');
 
 # 订单状态 1作废 2未审核 3已确认 4已发货 5已签收
 CREATE TABLE order_status(

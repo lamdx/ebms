@@ -14,12 +14,12 @@
       rel="stylesheet"
       href="assets/fontawesome-free-5.11.2-web/css/all.min.css"
     />
-    <!-- nprogress进度条插件 -->
-    <link rel="stylesheet" href="assets/">
-    <!-- <link rel="stylesheet" href="/node_modules/nprogress/nprogress.css" /> -->
-    <link rel="stylesheet" href="css/index.css" />
     <!-- nprogress进度条插件脚本 -->
     <script src="/node_modules/nprogress/nprogress.js"></script>
+    <!-- nprogress进度条插件 -->
+    <link rel="stylesheet" href="assets/nprogress/nprogress.css" />
+    <!-- <link rel="stylesheet" href="/node_modules/nprogress/nprogress.css" /> -->
+    <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
     <!-- 侧边栏目录 -->
@@ -209,7 +209,6 @@
     <script src="/node_modules/art-template/lib/template-web.js"></script>
     <!-- twbs-pagination分页插件 -->
     <script src="/node_modules/twbs-pagination/jquery.twbsPagination.min.js"></script>
-    <!-- <script src="assets/twbs-pagination/jquery.twbsPagination.min.js"></script> -->
     <script type="text/template" id="tmpl_nav">
       {{each nav}}
       <li class="nav-item {{$value.tid == tid ? 'active' : ''}}">

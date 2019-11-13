@@ -1,15 +1,4 @@
-$(function() {
-  // NProgress.start();
-  // NProgress.done();
-  // Nprogress.configure({
-  //   showSpinner: false
-  // });
-  $(document).ajaxStart(function() {
-    Nprogress.start();
-  });
-  $(document).ajaxComplete(function() {
-    Nprogress.done();
-  });
+$(function($) {
   // 联动效果
   // http://localhost/userUpdate.html?tid=7&cid=25
   // 根据URL获取侧边栏目录中列表id以及顶部导航栏导航id
