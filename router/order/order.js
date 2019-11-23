@@ -208,11 +208,11 @@ router.put("/v1/updateorder", (req, res) => {
   // let $user_name = req.body.user_name;
   // let $gender = req.body.gender;
   let obj = req.body;
-  console.log(obj);
+  // console.log(obj);
   let sql = "update order_list set ? where orderNo = ?;";
   pool.query(sql, [obj, obj.orderNo], (err, result) => {
     if (err) throw err;
-    console.log(result);
+    // console.log(result);
     if (result.affectedRows > 0) {
       // 更改成功
       res.send("1");
@@ -225,11 +225,11 @@ router.put("/v1/updateorder", (req, res) => {
 // 8.新增订单
 router.post("/v1/orderadd", (req, res) => {
   let obj = req.body;
-  console.log(obj);
+  // console.log(obj);
   let sql = "insert into order_list set ? ";
   pool.query(sql, [obj], (err, result) => {
     if (err) throw err;
-    console.log(result);
+    // console.log(result);
     if (result.affectedRows > 0) {
       res.send("1");
     } else {
