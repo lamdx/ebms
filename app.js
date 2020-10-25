@@ -25,8 +25,8 @@ const backRouter = require("./router/router");
 // 创建web服务器
 let app = express();
 // 监听端口
-app.listen(80, function() {
-  console.log(80);
+app.listen(3000, function() {
+  console.log(3000);
 });
 
 // 尽可能早使用session中间件
